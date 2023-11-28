@@ -1,14 +1,13 @@
-import { ForgotPasswordForm } from '@/components/auth';
-import { baseApi } from '@/pages/api/base-api';
+import { baseApi, getTokenFromLocalStorage } from '@/pages/api/base-api';
 
 const authService = baseApi.injectEndpoints({
   endpoints: builder => ({
-    forgotPassword: builder.mutation<any,any>({
+    confirmCode: builder.mutation<any, any>({
       query: params => {
         return {
           body: params,
           method: 'POST',
-          url: 'v1/auth/password-recovery-email',
+          url: '/api/v1/auth/confirm-code',
         };
       },
     }),
@@ -21,8 +20,17 @@ const authService = baseApi.injectEndpoints({
     login: builder.mutation<any, any>({
       query: data => ({
         body: data,
+        headers: {
+          Authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
         method: 'POST',
         url: '/api/v1/auth/login',
+      }),
+    }),
+    logout: builder.mutation<any, void>({
+      query: () => ({
+        method: 'GET',
+        url: '/api/v1/auth/logout',
       }),
     }),
     signUp: builder.mutation<any, any>({
@@ -30,11 +38,17 @@ const authService = baseApi.injectEndpoints({
         return {
           body: params,
           method: 'POST',
-          url: 'v1/auth/sign-up',
+          url: '/api/v1/auth/registration',
         };
       },
     }),
   }),
 });
 
-export const { useForgotPasswordMutation, useGetMeQuery, useLoginMutation, useSignUpMutation } = authService;
+export const {
+  useConfirmCodeMutation,
+  useGetMeQuery,
+  useLoginMutation,
+  useLogoutMutation,
+  useSignUpMutation,
+} = authService;
