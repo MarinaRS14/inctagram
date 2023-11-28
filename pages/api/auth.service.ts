@@ -1,7 +1,17 @@
+import { ForgotPasswordForm } from '@/components/auth';
 import { baseApi } from '@/pages/api/base-api';
 
 const authService = baseApi.injectEndpoints({
   endpoints: builder => ({
+    forgotPassword: builder.mutation<any,any>({
+      query: params => {
+        return {
+          body: params,
+          method: 'POST',
+          url: 'v1/auth/password-recovery-email',
+        };
+      },
+    }),
     getMe: builder.query<any, any>({
       query: () => ({
         method: 'GET',
@@ -27,4 +37,4 @@ const authService = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetMeQuery, useLoginMutation, useSignUpMutation } = authService;
+export const { useForgotPasswordMutation, useGetMeQuery, useLoginMutation, useSignUpMutation } = authService;
